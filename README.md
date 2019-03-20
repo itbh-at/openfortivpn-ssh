@@ -62,7 +62,7 @@ We persume you want oracle service on port 1519 on your localhost.
 If you need more ports to be published please provide hostPort:forwardPort pair at the end of ./vpn_connect script like this:
 
 ```
-./vpn_connect.sh gw-username gw-password gw-host forward jump-host-user@jump-host remote-server  [hostPrt1:forwPrt1][hostPrt2:forwPrt2] ...
+    ./vpn_connect.sh gw-username gw-password gw-host forward jump-host-user@jump-host remote-server  [hostPrt1:forwPrt1][hostPrt2:forwPrt2] ...
 ```
 
 You can check your container with command ``docker ps -a``
@@ -86,7 +86,7 @@ In case you need directly work with remote server through ssh you can use direct
 Just run this command
 
 ```
-./vpn_connect.sh gw-username gw-password gw-host direct user@remote-server
+    ./vpn_connect.sh gw-username gw-password gw-host direct user@remote-server
 ```
 
 After this command the tunnel is created, remote server authenticate you and you will be offered the prompt.
