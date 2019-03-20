@@ -53,7 +53,7 @@ If you prefer to use your own image name you can do it with -i switch
 ## Forward mode
 
 Forward mode forwards traffic from contianer through jump host to remote server where some service is listening. Let's assume we need to connect from our localhost to Oracle service on port 1521 on remote server.
-We persume you want oracle service on port 1519 on your localhost.
+We presume you want oracle service on port 1519 on your localhost.
 
 ```
     ./vpn_connect.sh gw-username gw-password gw-host forward jump-host-user@jump-host remote-server 1519:1521
