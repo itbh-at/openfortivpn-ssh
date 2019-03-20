@@ -1,6 +1,6 @@
 # About
 
-This container provides possibility to connect with remote VPN gateway with openfortivpn client. You can use two modes:
+This container provides possibility to connect remote VPN gateway with openfortivpn client. You can use two modes:
 
 - forward mode
 - direct mode
@@ -39,6 +39,18 @@ Build image with build script
 ```
 Please be advised that we use multistage image (for build and for production). Build script automatically removes intermediate images from the system.
 
+If you wish you can use directly our image from the the docker hub repository itbhat/openfortivpn-ssh
+Just write
+```
+    docker pull itbhat/openfortivpn-ssh:v1.9.0
+```
+where v1.9.0 is the version of respective openfortivpn client.
+
+`vpn_connect.sh` script uses itbhat/openfortivpn-ssh:v1.9.0 as default image.
+If you prefer to use your own image name you can do it with -i switch
+`vpn_connect.sh -i <image_name>`
+
+
 
 ## Forward mode
 
@@ -60,11 +72,11 @@ You can check your container with command ``docker ps -a``
 Its name should be created according to particular mode in use. For example if you connect in forward mode on to remote-server the name will be
 ``vpn-kabelplus-forward-<ip-of-remote-server>```
 
-If you want provide your own host-name (jump host or remote server) please add them
-into vpn_connect.sh script in KNOWN_HOSTS array in form
-`host-name:IP`
+If you want to provide your own host-name (jump host or remote server) you can do so by providing file with -f switch `vpn_connect.sh -f host_file`
 
-and you can use it for jump-host or remote-server arguments. They will be translated to IP automatically.
+The syntax of this file is following
+`host-name:IP`
+where every line contains one hostname - IP mapping which is directly added in containers /etc/hosts file
 
 Now you should be able to connect to an oracle service on your host ``localhost:1519``
 
