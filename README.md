@@ -1,6 +1,8 @@
 # About
 
-This container provides possibility to connect remote VPN gateway with openfortivpn client. You can use two modes:
+This container provides possibility to connect remote VPN gateway with openfortivpn client. Container is working with one time password or so called token generated on fortitoken generator. We tested it with FortiToken 200. After container start the token is asked on command line and will be used for next authentication.
+
+You can use two modes:
 
 - forward mode
 - direct mode
@@ -20,17 +22,13 @@ Please take into consideration that you need some credentials before you can con
 - vpn pasword for this user
 - gatway hostname or IP
 - jump host account (if you plan to use forward mode)
+- forti token generator device
 
 # Usage
 
 For both modes you need to create image from which the container is created and set proper environment variables. So these steps are common for both modes:
 
 Download this project from git
-
-```
-    git clone https://gitlab.devops.cloud.itbh.at/kabelplus/kabelplusvpn.git
-    cd kabelplusvpn
-```
 
 Build image with build script
 ```
@@ -39,7 +37,8 @@ Build image with build script
 ```
 Please be advised that we use multistage image (for build and for production). Build script automatically removes intermediate images from the system.
 
-If you wish you can use directly our image from the the docker hub repository itbhat/openfortivpn-ssh
+If you wish you can use directly our image from the the docker hub repository `itbhat/openfortivpn-ssh`
+
 Just write
 ```
     docker pull itbhat/openfortivpn-ssh:v1.9.0
@@ -54,8 +53,8 @@ If you prefer to use your own image name you can do it with -i switch
 
 ## Forward mode
 
-If you want to connect with a remote oracle service and make this to listen on your host OS use port forward mode  like this (we persume you want oracle service on port 1519 on your localhost):
-
+Forward mode forwards traffic from contianer through jump host to remote server where some service is listening. Let's assume we need to connect from our localhost to Oracle service on port 1521 on remote server.
+We persume you want oracle service on port 1519 on your localhost.
 
 ```
     ./vpn_connect.sh gw-username gw-password gw-host forward jump-host-user@jump-host remote-server 1519:1521
@@ -69,10 +68,11 @@ If you need more ports to be published please provide hostPort:forwardPort pair 
 
 You can check your container with command ``docker ps -a``
 
-Its name should be created according to particular mode in use. For example if you connect in forward mode on to remote-server the name will be
-``vpn-kabelplus-forward-<ip-of-remote-server>```
+Its name should be created from particular mode in use and remote server.
+`direct-remote-server-name`
 
-If you want to provide your own host-name (jump host or remote server) you can do so by providing file with -f switch `vpn_connect.sh -f host_file`
+If you want to provide your own host-name-IP mapping you can do so by providing file with -f switch `vpn_connect.sh -f host_file`.
+This is useful when you need to use host names for jump host or remote server.
 
 The syntax of this file is following
 `host-name:IP`
