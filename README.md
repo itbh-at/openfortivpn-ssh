@@ -11,7 +11,6 @@ In forward mode you can connect to remote server through jump server and provide
 
 In direct mode you can directly connect with remote server.
 
-
 # Requirements
 
 - docker installed on your PC [look here](https://docs.docker.com/install/)
@@ -31,15 +30,17 @@ For both modes you need to create image from which the container is created and 
 Download this project from git
 
 Build image with build script
-```
-   ./build.sh
 
 ```
+   ./build.sh
+```
+
 Please be advised that we use multistage image (for build and for production). Build script automatically removes intermediate images from the system.
 
 If you wish you can use directly our image from the the docker hub repository `itbhat/openfortivpn-ssh`
 
-Just write
+Just write:
+
 ```
     docker pull itbhat/openfortivpn-ssh:v1.9.0
 ```
@@ -48,8 +49,6 @@ where v1.9.0 is the version of respective openfortivpn client.
 `vpn_connect.sh` script uses itbhat/openfortivpn-ssh:v1.9.0 as default image.
 If you prefer to use your own image name you can do it with -i switch
 `vpn_connect.sh -i <image_name>`
-
-
 
 ## Forward mode
 
