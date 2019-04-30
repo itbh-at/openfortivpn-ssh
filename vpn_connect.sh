@@ -141,10 +141,6 @@ if [[ "${MODE}" == "rsync" ]];then
   SOURCE=${2} 
   DST=${3} 
 
-  echo ${OPTS}
-  echo ${SOURCE}
-  echo ${DST}
-
   # now according to possition mount respective SOURCE/DST folder to container
   if [[ "${SOURCE}" == *"@"* ]];then
     # this is the download case  user@host:/path/on/server --> /path/on/host
