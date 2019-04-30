@@ -124,12 +124,7 @@ fi
 
 if [[ "${MODE}" == "rsync" ]];then
 # get remote server from params
-  REMOTE_SERVER=${5}
-
-  if [[ ${REMOTE_SERVER} == *"@"* ]];then
-    arrHost=(${REMOTE_SERVER//@/ })
-  fi
-
+  
   for i in "${KNOWN_HOSTS[@]}"
     do
         add_hosts+="--add-host $i "
@@ -146,19 +141,15 @@ if [[ "${MODE}" == "rsync" ]];then
     DST=${2} 
   fi
 
-  echo ${OPTS}
-  echo ${SOURCE}
-  echo ${DST}
-
   # now according to possition mount respective SOURCE/DST folder to container
   if [[ "${SOURCE}" == *"@"* ]];then
     # this is the download case  user@host:/path/on/server --> /path/on/host
 
     BINDMOUNT_OPT="-v ${DST}:/host_dst/"
+    HOST_WITH_USER=(${SOURCE//:/ })
+    arrHost=(${HOST_WITH_USER##*@})
   else
    # this is the upload case /path/on/host --> user@host:/path/on/server
-   
-
     if [[ -f "${SOURCE}" ]];then
       # is regular file
       FILE_DIR=${SOURCE%\/*}
@@ -167,9 +158,11 @@ if [[ "${MODE}" == "rsync" ]];then
       # ${SOURCE} is directory
       BINDMOUNT_OPT="-v ${SOURCE}:/host_dst/"
     fi
+    HOST_WITH_USER=(${DST//:/ })
+    arrHost=(${HOST_WITH_USER##*@})
   fi
 
-  COMMAND="docker run --rm ${BINDMOUNT_OPT} --name="${MODE}-${arrHost[1]}" -it --privileged ${add_hosts} ${IMAGE_NAME} ${VPN_USER} ${VPN_PASSWORD} ${GW} ${MODE} ${OPTS} ${SOURCE} ${DST}"
+  COMMAND="docker run --rm ${BINDMOUNT_OPT} --name="${MODE}-${arrHost}" -it --privileged ${add_hosts} ${IMAGE_NAME} ${VPN_USER} ${VPN_PASSWORD} ${GW} ${MODE} ${OPTS} ${SOURCE} ${DST}"
   echo $COMMAND
   $COMMAND
 fi
