@@ -137,17 +137,36 @@ if [[ "${MODE}" == "rsync" ]];then
 
   shift 4 # get away previouse options
 
-  OPTS=${1}
-  SOURCE=${2} 
-  DST=${3} 
+  if [[ ${#} -eq 3 ]];then
+    OPTS=${1}
+    SOURCE=${2} 
+    DST=${3} 
+  else
+    SOURCE=${1} 
+    DST=${2} 
+  fi
+
+  echo ${OPTS}
+  echo ${SOURCE}
+  echo ${DST}
 
   # now according to possition mount respective SOURCE/DST folder to container
   if [[ "${SOURCE}" == *"@"* ]];then
     # this is the download case  user@host:/path/on/server --> /path/on/host
+
     BINDMOUNT_OPT="-v ${DST}:/host_dst/"
   else
    # this is the upload case /path/on/host --> user@host:/path/on/server
-    BINDMOUNT_OPT="-v ${SOURCE}:/host_dst/"
+   
+
+    if [[ -f "${SOURCE}" ]];then
+      # is regular file
+      FILE_DIR=${SOURCE%\/*}
+      BINDMOUNT_OPT="-v ${FILE_DIR}:/host_dst/"
+    else
+      # ${SOURCE} is directory
+      BINDMOUNT_OPT="-v ${SOURCE}:/host_dst/"
+    fi
   fi
 
   COMMAND="docker run --rm ${BINDMOUNT_OPT} --name="${MODE}-${arrHost[1]}" -it --privileged ${add_hosts} ${IMAGE_NAME} ${VPN_USER} ${VPN_PASSWORD} ${GW} ${MODE} ${OPTS} ${SOURCE} ${DST}"

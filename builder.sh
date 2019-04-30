@@ -12,7 +12,7 @@
 # Usage:
 #    ./build.sh
 
-docker build -t openfortivpn-ssh:v1.9.0 .
+docker build -t itbhat/openfortivpn-ssh:v1.9.0 .
 
 #remove intermediate builder image
 docker rmi $(docker images -q -f dangling=true)

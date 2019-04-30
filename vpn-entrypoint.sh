@@ -61,16 +61,28 @@ fi
 if [[ "${MODE}" == "rsync" ]];then
   echo "rsync transfer mode..."
 
-  OPTS=${1}
-  SOURCE=${2}
-  DST=${3}
+  if [[ ${#} -eq 3 ]];then
+    OPTS=${1}
+    SOURCE=${2} 
+    DST=${3} 
+  else
+    SOURCE=${1} 
+    DST=${2} 
+  fi
 
   if [[ "${SOURCE}" == *"@"* ]];then
     # this is the download case  user@host:/path/on/server --> /path/on/host
     DST="/host_dst/"
   else
     # this is the upload case /path/on/host --> user@host:/path/on/server
-    SOURCE="/host_dst/"
+    
+    FILE=${SOURCE##*/}
+    if [[ -f "/host_dst/${FILE}" ]];then
+      # is regular file
+      SOURCE="/host_dst/${FILE}"
+    else
+      SOURCE="/host_dst/"
+    fi
   fi
 
   COMMAND="rsync ${OPTS} -e ssh ${SOURCE} ${DST}"
