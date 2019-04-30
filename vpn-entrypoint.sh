@@ -5,7 +5,6 @@ VPN_PASSWORD=${2}
 GW=${3}
 MODE=${4}
 
-
 if [ ! -f /dev/ppp ];then
    echo "Creating special /dev/ppp device"
    mknod /dev/ppp c 108 0
@@ -22,6 +21,7 @@ REMOTE_SERVER=${1}
 
 # get containers IP
 CONTAINER_IP=$(ip a | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | grep 172.17 | grep -v 255.255)
+
 
 if [[ "${MODE}" == "forward" ]];then
   echo "Forward mode..."
@@ -56,5 +56,25 @@ fi
 if [[ "${MODE}" == "direct" ]];then
   echo "Direct mode..."
   ssh -v -o ServerAliveInterval=60 ${REMOTE_SERVER}
+fi
+
+if [[ "${MODE}" == "rsync" ]];then
+  echo "rsync transfer mode..."
+
+  OPTS=${1}
+  SOURCE=${2}
+  DST=${3}
+
+  if [[ "${SOURCE}" == *"@"* ]];then
+    # this is the download case  user@host:/path/on/server --> /path/on/host
+    DST="/host_dst/"
+  else
+    # this is the upload case /path/on/host --> user@host:/path/on/server
+    SOURCE="/host_dst/"
+  fi
+
+  COMMAND="rsync ${OPTS} -e ssh ${SOURCE} ${DST}"
+  echo "Executing command: ${COMMAND}"
+  $COMMAND
 fi
 
