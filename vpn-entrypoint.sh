@@ -4,6 +4,7 @@ VPN_USER=${1}
 VPN_PASSWORD=${2}
 GW=${3}
 MODE=${4}
+OUTPUT=$(mktemp "/tmp/$(basename 0).XXXXXX")
 
 if [ ! -f /dev/ppp ];then
    echo "Creating special /dev/ppp device"
@@ -13,8 +14,16 @@ fi
 echo "Please give me your token (exactly 6 digits):"
 read -s -n 6 TOKEN
 
-echo $TOKEN | /usr/bin/openfortivpn ${GW} -u ${VPN_USER} -p ${VPN_PASSWORD}  &
-sleep 5 # wait until VPN tunnel is created
+# redirect output (both) in order to evaluate them in loop later
+exec > >(tee -ia $OUTPUT)
+exec 2> >(tee -ia $OUTPUT)
+
+echo $TOKEN | /usr/bin/openfortivpn ${GW} -u ${VPN_USER} -p ${VPN_PASSWORD} >&2  &
+until grep -q -i 'Tunnel is up and running' $OUTPUT
+do
+  # wait until VPN tunnel is created
+   sleep 1
+done
 
 shift 4 # shift away VPN_USER VPN_PASSWORD GW and MODE
 REMOTE_SERVER=${1}
