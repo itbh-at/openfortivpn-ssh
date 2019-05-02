@@ -10,6 +10,7 @@ You can use two modes:
 
 - forward mode
 - direct mode
+- rsync mode
 
 In forward mode you can connect to remote server through jump server and provide
 forward ports for host OS.
