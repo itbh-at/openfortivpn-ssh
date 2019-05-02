@@ -7,6 +7,7 @@
 # There are two modes for this script:
 #    - forward
 #    - direct mode
+#    - rsync mode
 # 
 # Forward mode is used to forward ports to another host through jump host. Ports are 
 # then available in host OS where other clients can use them.
@@ -22,6 +23,9 @@
 #
 # Usage (direct mode):
 #    ./vpn_connect.sh -i image_name -f host_file <user> <password> <gateway> direct username@server-dns-or-ip
+#
+# Usage (rsync mode):
+#    ./vpn_connect.sh -i image_name -f host_file <user> <password> <gateway> rsync username@server-dns-or-ip <direcotry-on-host-or-file>
 
 
 # Reset the POSIX variable in case getopts has been used previously in the

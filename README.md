@@ -109,3 +109,21 @@ Just run this command
 
 After this command the tunnel is created, remote server authenticate you and you
 will be offered the prompt.
+
+### Rsync mode
+
+Rsync mode can be useful in case you need to copy something to/from remote server. Volumes are used in order to make your transfered data accessible for container. 
+
+To download something from server to the current directory please use:
+
+```bash
+  ./vpn_connect.sh gw-username gw-password gw-host rsync -avh user@remote-server:/bar $(pwd)/
+```
+
+Or otherwise to upload something to server from folder foo use:
+
+```bash
+  ./vpn_connect.sh gw-username gw-password gw-host rsync -avh  $(pwd)/foo user@remote-server:/
+```
+
+The usage is the same as with rsync command.
